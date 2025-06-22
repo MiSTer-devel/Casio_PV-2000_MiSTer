@@ -347,7 +347,7 @@ module vdp18_ctrl
         result_v = '0;
         for (int idx = 0; idx < 256; idx++) begin
           if (val == idx) begin
-            result_v = signed'(mod_v);
+            result_v = signed'(mod_v[8:0]);
           end
 
           if (mod_v < 5) begin

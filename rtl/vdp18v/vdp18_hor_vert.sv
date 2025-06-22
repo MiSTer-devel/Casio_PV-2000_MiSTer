@@ -91,8 +91,8 @@ module vdp18_hor_vert
         first_line_s = hv_first_line_pal_c;
         last_line_s = hv_last_line_pal_c;
       end else begin : is_ntsc
-        first_line_s = hv_first_line_ntsc_c;
-        last_line_s = hv_last_line_ntsc_c;
+        first_line_s = hv_first_line_ntsc_c[8:0];
+        last_line_s = hv_last_line_ntsc_c[8:0];
       end
   end
   //
@@ -110,13 +110,13 @@ module vdp18_hor_vert
     begin: opmode_mux
       if (opmode_i == OPMODE_TEXTM)
         begin
-          first_pix_s = hv_first_pix_text_c;
-          last_pix_s = hv_last_pix_text_c;
+          first_pix_s = hv_first_pix_text_c[8:0];
+          last_pix_s = hv_last_pix_text_c[8:0];
         end
       else
         begin
-          first_pix_s = hv_first_pix_graph_c;
-          last_pix_s = hv_last_pix_graph_c;
+          first_pix_s = hv_first_pix_graph_c[8:0];
+          last_pix_s = hv_last_pix_graph_c[8:0];
         end
     end
   //
@@ -133,7 +133,7 @@ module vdp18_hor_vert
     begin: counters
       if (reset_i)
         begin
-          cnt_hor_q <= hv_first_pix_text_c;
+          cnt_hor_q <= hv_first_pix_text_c[8:0];
           cnt_vert_q <= first_line_s;
           hsync_n_o <= 1'b1;
           vsync_n_o <= 1'b1;
@@ -149,14 +149,14 @@ module vdp18_hor_vert
               if (cnt_hor_q == last_pix_s)
                 cnt_hor_q <= first_pix_s;
               else
-                cnt_hor_q <= cnt_hor_q + 1;
+                cnt_hor_q <= cnt_hor_q + 1'b1;
 
               // The vertical counter -----------------------------------------------
               if (cnt_vert_q == last_line_s)
                 cnt_vert_q <= first_line_s;
               else if (vert_inc_s)
                 // increment when horizontal counter is at trigger position
-                cnt_vert_q <= cnt_vert_q + 1;
+                cnt_vert_q <= cnt_vert_q + 1'b1;
 
               // Horizontal sync ----------------------------------------------------
               if (cnt_hor_q == -64)
